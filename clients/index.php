@@ -41,8 +41,10 @@ require_once($_SERVER['DOCUMENT_ROOT'] . "/header.php");
     }
 
     const docReady= async()=>{
-        const clients = await getData();
-        console.log(clients)
+        const clients = await getData().then((res)=>res.clients);
+        clients.forEach(element => {
+            console.table(element);
+        });
     }
 
     docReady()

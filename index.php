@@ -1,5 +1,5 @@
 <?php
-require_once($_SERVER['DOCUMENT_ROOT'] . "/header.php");
+require_once $_SERVER['DOCUMENT_ROOT'] . "/header.php";
 ?>
 
 <div class="container-main container">
