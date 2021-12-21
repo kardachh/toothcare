@@ -173,3 +173,13 @@ height: 500px;
   border: solid 1px #000;
   height: 300px;
 }
+
+.servises-screen-wrap{
+  width: 700px;
+}
+
+.tovary{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
