@@ -67,14 +67,34 @@ require_once($_SERVER['DOCUMENT_ROOT'] . "/header.php");
 </div>
 
 <script>
-    const url = 'http://toothcare:8888/api/get_list_clients';
+    const urlClients = 'http://toothcare:8888/api/get_list_clients';
+    const urlDiagnosesList = 'http://toothcare:8888/api/get_diagnoses_list';
+
     let clients = [];
 
-    const getData = async () => {
+    const getClientsData = async () => {
         try {
-            const response = await fetch(url, {
+            const response = await fetch(urlClients, {
                 method: 'GET', // или 'PUT'
                 // body: JSON.stringify(data), // данные могут быть 'строкой' или {объектом}!
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const json = await response.json();
+            return json;
+        } catch (error) {
+            console.error('Ошибка:', error);
+            return null;
+        }
+    }
+    
+    const getDiagnosesData = async (id) => {
+        console.log(id)
+        try {
+            const response = await fetch(urlDiagnosesList, {
+                method: 'GET', // или 'PUT'
+                body: JSON.stringify({client:id}), // данные могут быть 'строкой' или {объектом}!
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -128,9 +148,12 @@ require_once($_SERVER['DOCUMENT_ROOT'] . "/header.php");
     }
 
     const docReady = async () => {
-        clients = await getData().then((res) => res.clients);
+        clients = await getClientsData().then((res) => res.clients);
         setClients(clients)
         addHandlers()
+        getDiagnosesData(1).then((res)=>{
+            console.log(res)
+        })
         // $('.client')[0].click()
     }
 
