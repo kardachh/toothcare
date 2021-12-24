@@ -18,7 +18,7 @@
                 <div class="container page-name">
                     <div>Пациенты</div>
                 </div>
-                <button class="container button">
+                <button class="container button add-client">
                     <div>Добавить пациента</div>
                 </button>
             </div>
@@ -37,7 +37,6 @@
     <div class="modal" style="display: none;">
         <div class="container container-main modal-window">
             <div class="modal-close">
-                <!-- <img src=''/> -->
                 <div>
                     X
                 </div>
@@ -69,8 +68,92 @@
             </div>
         </div>
     </div>
+
+    <div class="modal-add-client" style="display: none;">
+        <div class="container container-main modal-window">
+            <div class="modal-add-client-close">
+                <div>
+                    X
+                </div>
+            </div>
+            <form class="form-new-client" method="POST" action="../api/add_new_client/index.php">
+                <div>
+                    <label for="surname">Фамилия:</label>
+                    <input id="surname" type="text" name="surname" required />
+                </div>
+                <div>
+                    <label for="first-name">Имя:</label>
+                    <input id="first-name" type="text" name="first-name" required />
+                </div>
+                <div>
+                    <label for="second-name">Отчество:</label>
+                    <input id="second-name" type="text" name="second-name" required />
+                </div>
+                <div>
+                    <label for="gender">Пол:</label>
+                    <div id="gender">
+                        <label for="man">Мужской</label>
+                        <input id="man" type="radio" name="gender" value="М" required />
+
+                        <label for="women">Женский</label>
+                        <input id="women" type="radio" name="gender" value="Ж" required />
+                    </div>
+                </div>
+                <div>
+                    <label for="phone">Телефон</label>
+                    <input id="phone" type="tel" name="phone"
+                        pattern="\+7\s?[\(]{0,1}9[0-9]{2}[\)]{0,1}\s?\d{3}[-]{0,1}\d{2}[-]{0,1}\d{2}"
+                        placeholder="+7(___)___-__-__" required />
+                </div>
+                <div>
+                    <label for="birthday">Дата рождения</label>
+                    <input id="birthday" type="date" name="birthday" required />
+                </div>
+                <button id="add-new-client" class="container button">
+                    Добавить
+                </button>
+            </form>
+        </div>
+    </div>
+    </div>
 </body>
 
+<!-- маска для телефона -->
+<script type="text/javascript">
+    function setCursorPosition(pos, e) {
+        e.focus();
+        if (e.setSelectionRange) e.setSelectionRange(pos, pos);
+        else if (e.createTextRange) {
+            var range = e.createTextRange();
+            range.collapse(true);
+            range.moveEnd("character", pos);
+            range.moveStart("character", pos);
+            range.select()
+        }
+    }
+
+    function mask(e) {
+        //console.log('mask',e);
+        var matrix = this.placeholder,// .defaultValue
+            i = 0,
+            def = matrix.replace(/\D/g, ""),
+            val = this.value.replace(/\D/g, "");
+        def.length >= val.length && (val = def);
+        matrix = matrix.replace(/[_\d]/g, function (a) {
+            return val.charAt(i++) || "_"
+        });
+        this.value = matrix;
+        i = matrix.lastIndexOf(val.substr(-1));
+        i < matrix.length && matrix != this.placeholder ? i++ : i = matrix.indexOf("_");
+        setCursorPosition(i, this)
+    }
+    window.addEventListener("DOMContentLoaded", function () {
+        var input = document.querySelector("#phone");
+        input.addEventListener("input", mask, false);
+        input.focus();
+        setCursorPosition(3, input);
+    });
+</script>
 
 <script type="module">
 
@@ -79,7 +162,13 @@
 
     let clients = [];
 
+    const form = document.querySelector('.form-new-client');
+    form.addEventListener('submit', function (evt) {
+        console.log(evt)
+        // evt.preventDefault();
 
+        this.submit();
+    });
 
     const renderClient = (client) => {
         let element = document.createElement("div");
@@ -89,34 +178,35 @@
         return element;
     }
 
-    const toggleModal = () => {
-        $('.modal').toggle()
+    const toggleModal = (modalClass) => {
+        $(`.${modalClass}`).toggle()
     }
 
     const changeModal = async (client) => {
-        console.table(client)
         const diagnoses = await api.getDiagnosesData(client.id).then((res) => res)
+        $('.diagnoses-list').empty()
         $('.surname').replaceWith(`<div class = "surname">${client.surname}</div>`)
         $('.first-name').replaceWith(`<div class = "first-name">${client.first_name}</div>`)
         $('.second-name').replaceWith(`<div class = "second-name">${client.second_name}</div>`)
         $('.phone').replaceWith(`<div class = "phone">${client.phone}</div>`)
         $('.gender').replaceWith(`<div class = "gender">${client.gender}</div>`)
         $('.birthday').replaceWith(`<div class = "birthday">${client.birthday}</div>`)
-        $('.diagnoses-list').empty()
 
-        const diagnosesHTML = diagnoses.map((diagnos) => {
-            return `<div class="diagnos">
-                        <div class="diagnos-name">
-                            ${diagnos.name}
-                        </div>
-                        <div class="diagnos-description">
-                            ${diagnos.description}
-                        </div>
-                    </div>`;
-        })
-        diagnosesHTML.forEach(element => {
-            $(".diagnoses-list").append(element)
-        });
+        if (diagnoses) {
+            const diagnosesHTML = diagnoses.map((diagnos) => {
+                return `<div class="diagnos">
+                            <div class="diagnos-name">
+                                ${diagnos.name}
+                            </div>
+                            <div class="diagnos-description">
+                                ${diagnos.description}
+                            </div>
+                        </div>`;
+            })
+            diagnosesHTML.forEach(element => {
+                $(".diagnoses-list").append(element)
+            });
+        }
     }
 
     const setClients = (clients) => {
@@ -131,10 +221,11 @@
             const id = data.currentTarget.id.split('-')[1]
             const client = clients.find((client) => client.id === id)
             changeModal(client)
-            toggleModal()
+            toggleModal('modal')
         });
-
-        $('.modal-close').click(toggleModal)
+        $('.add-client').click(() => toggleModal('modal-add-client'))
+        $('.modal-close').click(() => toggleModal('modal'))
+        $('.modal-add-client-close').click(() => toggleModal('modal-add-client'))
     }
 
     const docReady = async () => {
