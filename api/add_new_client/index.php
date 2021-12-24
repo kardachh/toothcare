@@ -14,7 +14,7 @@ if (!$result) {
     echo "Произошла ошибка.\n";
     exit;
 }
-
+// var_dump($_POST);
 $info = pg_fetch_all($result);
 
-echo json_encode($result);
+echo json_encode(array("info"=>$info));

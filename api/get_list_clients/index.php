@@ -1,12 +1,13 @@
 <?php
 header('Content-Type: application/json');
-$dbconn = pg_connect("host=localhost port=1111 dbname=ToothCare user=kardachh password=") or die('Не удалось соединиться');
+$dbconn = pg_connect("host=localhost port=1111 dbname=ToothCare user=kardachh password=");
 
 $query = 'SELECT id, surname, first_name, second_name, gender, birthday, phone FROM "toothCare".patients order by surname';
 
 $result = pg_query($dbconn, $query);
 if (!$result) {
-  echo "Произошла ошибка.\n";
+  $errorResponce = array("error_code"=>1000);
+  echo json_encode($errorResponce);
   exit;
 }
 

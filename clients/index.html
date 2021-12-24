@@ -164,10 +164,31 @@
 
     const form = document.querySelector('.form-new-client');
     form.addEventListener('submit', function (evt) {
-        console.log(evt)
-        // evt.preventDefault();
+        evt.preventDefault(); // avoid to execute the actual submit of the form.
 
-        this.submit();
+        const form = $(this);
+        const url = form.attr('action');
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType: "JSON",
+            data: form.serialize(), // serializes the form's elements.
+            success: async (data) => {
+                console.log('Success')
+                toggleModal("modal-add-client")
+                $(".clients-list").empty()
+                clients = await api.getClientsData().then((res) => res)
+                setClients(clients)
+                addHandlers()
+            },
+            error: (data) => {
+                console.log('Error')
+                console.log(data)
+            }
+        });
+
+
     });
 
     const renderClient = (client) => {
@@ -210,16 +231,28 @@
     }
 
     const setClients = (clients) => {
-        const parentList = $(".clients-list")
-        clients.forEach(client => {
-            $(parentList).append(renderClient(client))
-        });
+        if (clients.clients) {
+            const parentList = $(".clients-list")
+            clients.clients.forEach(client => {
+                $(parentList).append(renderClient(client))
+            });
+        }
+        else {
+            switch (clients.error_code) {
+                case 1000:
+                    alert("Ошибка получения данных.\nПопробуйте перезагрузить страницу.",)
+                    break;
+
+                default:
+                    break;
+            }
+        }
     }
 
     const addHandlers = () => {
         $('.client').click((data) => {
             const id = data.currentTarget.id.split('-')[1]
-            const client = clients.find((client) => client.id === id)
+            const client = clients.clients.find((client) => client.id === id)
             changeModal(client)
             toggleModal('modal')
         });
@@ -229,7 +262,7 @@
     }
 
     const docReady = async () => {
-        clients = await api.getClientsData().then((res) => res.clients)
+        clients = await api.getClientsData().then((res) => res)
         setClients(clients)
         addHandlers()
     }
