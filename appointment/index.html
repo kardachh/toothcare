@@ -74,9 +74,9 @@
         }
     </script>
 
-    <div id="auth" title="Войдите в систему" style="display: none;">
-        <form class="form-auth" action="http://toothcare:8888/api/auth">
-            <label for="login">Логин:</label>
+    <div id="form-add-appointment" title="Добавление новой записи" style="display: none;">
+        <form class="form-new-appointment" action="#">
+            <label for="patient">Логин:</label>
             <input type="text" id="login" name="login" required />
             <br>
             <label for="login">Пароль:</label>
@@ -93,7 +93,7 @@
                 <div class="container page-name">
                     <div>Приём</div>
                 </div>
-                <button class="container button add-client">
+                <button class="container button add-appointment">
                     <div>Добавить запись</div>
                 </button>
             </div>
@@ -162,9 +162,26 @@
     import { useFetch } from "./../requests.js"
     const { api } = useFetch()
 
+    let appointments;
+    let patients;
+    let employees;
+
+    const onAddClick = () => {
+        console.log(123)
+    }
+
+    const addHandler = () => {
+        $(".add-appointment").click(() => onAddClick())
+    }
+
     const docReady = async () => {
-        const appointments = await api.getAppointmentData().then((res) => res)
+        appointments = await api.getAppointmentData().then((res) => res)
+        patients = await api.getClientsData().then((res) => res)
+        employees = await api.getEmployeesData().then((res) => res)
         console.log(appointments)
+        console.log(patients)
+        console.log(employees)
+        addHandler()
     }
 
     docReady()

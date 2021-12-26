@@ -33,12 +33,17 @@ const useFetch = () => {
     return request(url.urlAppointment);
   };
 
+  const getEmployeesData = () => {
+    return request(url.urlEmployees);
+  };
+
   return {
     api: {
       getClientsData,
       getDiagnosesData,
       getServisesData,
       getAppointmentData,
+      getEmployeesData,
     },
   };
 };

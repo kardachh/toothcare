@@ -5,9 +5,17 @@ const Settings = () => {
   const urlServises = `${urlHost}/api/get_servises_and_products`;
   const urlAuth = `${urlHost}/api/auth/`;
   const urlAppointment = `${urlHost}/api/get_appoinments`;
+  const urlEmployees = `${urlHost}/api/get_employees`;
 
   return {
-    url: { urlClients, urlDiagnosesList, urlServises, urlAuth, urlAppointment },
+    url: {
+      urlClients,
+      urlDiagnosesList,
+      urlServises,
+      urlAuth,
+      urlAppointment,
+      urlEmployees,
+    },
   };
 };
 
