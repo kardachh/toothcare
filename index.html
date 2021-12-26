@@ -3,29 +3,94 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="http://toothcare:8888/styles.css" >
-    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="http://toothcare:8888/styles.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"
+        integrity="sha256-xH4q8N0pEzrZMaRmd7gQVcTZiFei+HfRTBPJ1OGXC0k=" crossorigin="anonymous"></script>
 </head>
 
 <body>
+    <div class="auth" id="dialog" title="Войдите в систему" style="display: none;">
+        <form>
+            <label for="login">Логин:</label>
+            <input type="text" id="login" name="login" required />
+            <br>
+            <label for="login">Пароль:</label>
+            <input type="password" id="password" name="password" required />
+        </form>
+    </div>
+    <div id="stop-load">
+        <div onclick="stopLoad()">Сlick</div>
+    </div>
+
+
+
+    <script type="module">
+        var sl = document.getElementById('stop-load');
+        console.log(sessionStorage)
+
+        function stopLoad() {
+            sessionStorage.setItem('stopload', 'true'); // занести переменную в хранилище
+            location.reload(); // перезагрузить страницу
+        }
+
+        if (sessionStorage.getItem('stopload') === 'true') { // если в хранилище есть переменная 'stopload'
+            sl.parentNode.removeChild(sl); // удалить элемент
+            // sessionStorage.setItem('stopload', 'false'); // удалить 'stopload' из хранилища
+        } else { // остановить загрузку HTML страницы
+            if (window.stop !== undefined) {
+                window.stop();
+            } else if (document.execCommand !== undefined) {
+                document.execCommand("Stop", false);
+            }
+            $("#dialog").dialog({
+                height: 250,
+                width: 205,
+                modal: true,
+                buttons: {
+                    "Войти": () => console.log(123123),
+                    Cancel: function () {
+                        dialog.dialog("close");
+                    }
+                },
+                close: function () {
+                    form[0].reset();
+                    allFields.removeClass("ui-state-error");
+                }
+            });
+        }
+
+        const onAuthClick = () => {
+
+        }
+
+
+
+
+
+    </script>
+
+
 
     <div class="container-main container">
-    <div class="main-screen-wrap">
-    
-        <div class="container">
-            <div class="page-name">Стоматологическая клиника "ЗУБ"</div>
+        <div class="main-screen-wrap">
+
+            <div class="container">
+                <div class="page-name">Стоматологическая клиника "ЗУБ"</div>
+            </div>
+            <button class="container button" onclick="window.location='./appointment'">
+                <div>Прием</div>
+            </button>
+            <div class="container button" onclick="window.location='./clients'">
+                <div>Пациенты</div>
+
+            </div>
+            <div class="container button" onclick="window.location='./servises&products'">
+                <div>Услуги и товары</div>
+
+            </div>
         </div>
-        <button class="container button" onclick="window.location='./appointment'">
-            <div>Прием</div>
-        </button>
-        <div class="container button" onclick="window.location='./clients'">
-            <div>Пациенты</div>
-    
-        </div>
-        <div class="container button" onclick="window.location='./servises&products'">
-            <div>Услуги и товары</div>
-    
-        </div>
-    </div>
     </div>
 </body>

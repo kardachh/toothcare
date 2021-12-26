@@ -25,15 +25,17 @@ const useFetch = () => {
     });
   };
 
-  const getServises = async () => {
+  const getServisesData = async () => {
     return request(url.urlServises);
   };
+
+  const 
 
   return {
     api: {
       getClientsData,
       getDiagnosesData,
-      getServises,
+      getServisesData,
     },
   };
 };
