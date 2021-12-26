@@ -3,7 +3,6 @@ header('Content-Type: application/json');
 
 $dbconn = pg_connect("host=localhost port=1111 dbname=toothCare user=postgres password=");
 
-
 $newClient = $_POST;
 
 $query = "INSERT INTO \"toothCare\".patients

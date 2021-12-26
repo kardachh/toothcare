@@ -12,23 +12,17 @@
 </head>
 
 <body>
-    <div class="auth" id="dialog" title="Войдите в систему" style="display: none;">
-        <form>
+    <div id="auth" title="Войдите в систему" style="display: none;">
+        <form class="form-auth" action="http://toothcare:8888/api/auth">
             <label for="login">Логин:</label>
-            <input type="text" id="login" name="login" required />
+            <input type="text" id="login" name="login" required autocomplete="nickname" />
             <br>
             <label for="login">Пароль:</label>
-            <input type="password" id="password" name="password" required />
+            <input type="password" id="password" name="password" required autocomplete="current-password" />
         </form>
     </div>
-    <div id="stop-load">
-        <div onclick="stopLoad()">Сlick</div>
-    </div>
 
-
-
-    <script type="module">
-        var sl = document.getElementById('stop-load');
+    <script>
         console.log(sessionStorage)
 
         function stopLoad() {
@@ -36,8 +30,23 @@
             location.reload(); // перезагрузить страницу
         }
 
+        const checkUser = (infoAuth) => {
+            infoAuth.exist === true ? stopLoad() : alert("Неверный логин или пароль")
+        }
+
+        const onAuthClick = () => {
+            const form = document.querySelector('.form-auth');
+            const url = $(form).attr('action');
+            const data = $(form).serialize()
+            try {
+                $.getJSON(url, data, checkUser)
+            }
+            catch (error) {
+                alert(error)
+            }
+        }
+
         if (sessionStorage.getItem('stopload') === 'true') { // если в хранилище есть переменная 'stopload'
-            sl.parentNode.removeChild(sl); // удалить элемент
             // sessionStorage.setItem('stopload', 'false'); // удалить 'stopload' из хранилища
         } else { // остановить загрузку HTML страницы
             if (window.stop !== undefined) {
@@ -45,12 +54,12 @@
             } else if (document.execCommand !== undefined) {
                 document.execCommand("Stop", false);
             }
-            $("#dialog").dialog({
-                height: 250,
+            $("#auth").dialog({
+                height: 240,
                 width: 205,
                 modal: true,
                 buttons: {
-                    "Войти": () => console.log(123123),
+                    "Войти": () => onAuthClick(),
                     Cancel: function () {
                         dialog.dialog("close");
                     }
@@ -61,15 +70,6 @@
                 }
             });
         }
-
-        const onAuthClick = () => {
-
-        }
-
-
-
-
-
     </script>
 
 
