@@ -25,7 +25,11 @@
             <div class="search-zone">
                 <div class="search-wrap">
                     <input class="search-input" placeholder="Начните вводить пациента..." />
-                    <img src="/../assets/search.svg">
+                    <div class="search-image-wrap">
+                        <div>
+                            <img src="/../assets/search.svg">
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="clients-list">
@@ -179,7 +183,7 @@
                 $(".clients-list").empty()
                 clients = await api.getClientsData().then((res) => res)
                 setClients(clients)
-                addHandlers()
+                setHandlers()
             },
             error: (data) => {
                 console.log('Error')
@@ -202,7 +206,7 @@
         $(`.${modalClass}`).toggle()
     }
 
-    const changeModal = async (client) => {
+    const onToogleModal = async (client) => {
         const diagnoses = await api.getDiagnosesData(client.id).then((res) => res)
         $('.diagnoses-list').empty()
         $('.surname').replaceWith(`<div class = "surname">${client.surname}</div>`)
@@ -231,6 +235,7 @@
 
     const setClients = (clients) => {
         if (clients.clients) {
+            $('.clients-list').empty()
             const parentList = $(".clients-list")
             clients.clients.forEach(client => {
                 $(parentList).append(renderClient(client))
@@ -248,22 +253,51 @@
         }
     }
 
-    const addHandlers = () => {
+    const onChangeSearch = () => {
+        const searchStringText = $(".search-input").val();
+        if (searchStringText) {
+            const selectedClients = clients.clients.filter((client) => {
+                const fio = `${client.surname} ${client.first_name} ${client.second_name}`
+                return SubstringSearch(searchStringText, fio) !== -1 ? client : null
+            })
+            setClients({ clients: selectedClients })
+        }
+        else {
+            setClients(clients)
+        }
+    }
+
+    function SubstringSearch(sub, str)    // sub - искомая подстрока
+    {                                     // str - строка, в которой ищем
+        var i, j, n = sub.length,
+            N = str.length - n + 1;
+
+        for (i = 0; i < N; i++) {
+            j = 0;
+            while (j < n && sub.charAt(j) === str.charAt(i + j)) j++;
+            if (j === n) return i;
+        }                                // На выходе индекс 1-го символа подстроки.
+        // Если искомой подстроки нет в строке, то -1.
+        return -1;                       // Например,
+    }                                    // SubstringSearch('ips', 'Lorem ipsum') = 6,
+
+    const setHandlers = () => {
         $('.client').click((data) => {
             const id = data.currentTarget.id.split('-')[1]
             const client = clients.clients.find((client) => client.id === id)
-            changeModal(client)
+            onToogleModal(client)
             toggleModal('modal')
         });
         $('.add-client').click(() => toggleModal('modal-add-client'))
         $('.modal-close').click(() => toggleModal('modal'))
         $('.modal-add-client-close').click(() => toggleModal('modal-add-client'))
+        $('.search-input').change(() => onChangeSearch())
     }
 
     const docReady = async () => {
         clients = await api.getClientsData().then((res) => res)
         setClients(clients)
-        addHandlers()
+        setHandlers()
     }
 
     docReady()

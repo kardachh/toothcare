@@ -108,6 +108,15 @@ body {
 .search-wrap {
   border-bottom: solid 1px #e6e6e6;
   margin-bottom: 20px;
+  display: flex;
+}
+
+.search-image-wrap{
+  flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
 }
 
 .clients-list{
