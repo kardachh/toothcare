@@ -17,10 +17,10 @@
     <div id="auth" title="Войдите в систему" style="display: none;">
         <form class="form-auth" action="http://toothcare:8888/api/auth">
             <label for="login">Логин:</label>
-            <input type="text" id="login" name="login" required />
+            <input type="text" id="login" name="login" required autocomplete="nickname" />
             <br>
             <label for="login">Пароль:</label>
-            <input type="password" id="password" name="password" required />
+            <input type="password" id="password" name="password" required autocomplete="new-password" />
         </form>
     </div>
 
@@ -73,6 +73,17 @@
             });
         }
     </script>
+
+    <div id="auth" title="Войдите в систему" style="display: none;">
+        <form class="form-auth" action="http://toothcare:8888/api/auth">
+            <label for="login">Логин:</label>
+            <input type="text" id="login" name="login" required />
+            <br>
+            <label for="login">Пароль:</label>
+            <input type="password" id="password" name="password" required />
+        </form>
+    </div>
+
     <div class="container-main container">
         <div class="appointment-screen-wrap">
             <div class="top-buttons">
@@ -86,53 +97,62 @@
                     <div>Добавить запись</div>
                 </button>
             </div>
-        </div>
-    </div>
-    <div class="modal-add-client" style="display: none;">
-        <div class="container container-main modal-window">
-            <div class="modal-add-client-close">
-                <div>
-                    X
+            <div class="appointments-list">
+                <div class="sized-box">
+
+                </div>
+                <div class="sized-box">
+
+                </div>
+                <div class="sized-box">
+
+                </div>
+                <div class="sized-box">
+
+                </div>
+                <div class="sized-box">
+
+                </div>
+                <div class="sized-box">
+
+                </div>
+                <div class="sized-box">
+
+                </div>
+                <div class="sized-box">
+
+                </div>
+                <div class="sized-box">
+
+                </div>
+                <div class="sized-box">
+
+                </div>
+                <div class="sized-box">
+
+                </div>
+                <div class="sized-box">
+
+                </div>
+                <div class="sized-box">
+
+                </div>
+                <div class="sized-box">
+
+                </div>
+                <div class="sized-box">
+
+                </div>
+                <div class="sized-box">
+
+                </div>
+                <div class="sized-box">
+
+                </div>
+                <div class="sized-box">
+
                 </div>
             </div>
-
-            <!-- <form class="form-new-client" method="POST" action="../api/add_new_client/index.php">
-                <div>
-                    <label for="surname">Фамилия:</label>
-                    <input id="surname" type="text" name="surname" required />
-                </div>
-                <div>
-                    <label for="first-name">Имя:</label>
-                    <input id="first-name" type="text" name="first-name" required />
-                </div>
-                <div>
-                    <label for="second-name">Отчество:</label>
-                    <input id="second-name" type="text" name="second-name" required />
-                </div>
-                <div>
-                    <label for="gender">Пол:</label>
-                    <div id="gender">
-                        <label for="man">Мужской</label>
-                        <input id="man" type="radio" name="gender" value="М" required />
-
-                        <label for="women">Женский</label>
-                        <input id="women" type="radio" name="gender" value="Ж" required />
-                    </div>
-                </div>
-                <div>
-                    <label for="phone">Телефон</label>
-                    <input id="phone" type="tel" name="phone"
-                        pattern="\+7\s?[\(]{0,1}9[0-9]{2}[\)]{0,1}\s?\d{3}[-]{0,1}\d{2}[-]{0,1}\d{2}"
-                        placeholder="+7(___)___-__-__" required />
-                </div>
-                <div>
-                    <label for="birthday">Дата рождения</label>
-                    <input id="birthday" type="date" name="birthday" required />
-                </div>
-                <button id="add-new-client" class="container button">
-                    Добавить
-                </button>
-            </form> -->
         </div>
     </div>
 </body>
@@ -142,9 +162,10 @@
     import { useFetch } from "./../requests.js"
     const { api } = useFetch()
 
-    const toggleModal = (modalClass) => {
-        $(`.${modalClass}`).toggle()
+    const docReady = async () => {
+        const appointments = await api.getAppointmentData().then((res) => res)
+        console.log(appointments)
     }
 
-
+    docReady()
 </script>

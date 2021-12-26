@@ -266,6 +266,18 @@ height: 500px;
   height: 800px;
 }
 
+.appointments-list{
+  overflow: scroll;
+  height: calc(100% - 150px);
+}
+
+.sized-box{
+  background-color: #a8a8a8b8;
+  width: 100%;
+  height: 100px;
+  margin: 20px 0px;
+}
+
 /* Авторизация – Auth */
 
 .auth label,.auth input {

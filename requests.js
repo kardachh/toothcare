@@ -29,13 +29,16 @@ const useFetch = () => {
     return request(url.urlServises);
   };
 
-  const 
+  const getAppointmentData = async () => {
+    return request(url.urlAppointment);
+  };
 
   return {
     api: {
       getClientsData,
       getDiagnosesData,
       getServisesData,
+      getAppointmentData,
     },
   };
 };
