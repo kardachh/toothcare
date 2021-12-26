@@ -21,16 +21,7 @@
                         <div>Услуги</div>
                     </div>
                     <div class="col-list col-list-servises">
-                        <div class='col-list-left'>
-                            <div>
-                                123
-                            </div>
-                        </div>
-                        <div class='col-list-right'>
-                            <div>
-                                123
-                            </div>
-                        </div>
+
                     </div>
                 </div>
                 <div class='divider'></div>
@@ -38,17 +29,8 @@
                     <div class="container center">
                         <div>Товары</div>
                     </div>
-                    <div class="col-list col-list-staff">
-                        <div class='col-list-left'>
-                            <div>
-                                123
-                            </div>
-                        </div>
-                        <div class='col-list-right'>
-                            <div>
-                                123
-                            </div>
-                        </div>
+                    <div class="col-list col-list-products">
+
                     </div>
                 </div>
 
@@ -57,6 +39,64 @@
     </div>
 </body>
 
-<script>
+<script type="module">
+    import { useFetch } from "./../requests.js"
+    const { api } = useFetch()
 
+    let data = []
+    let products = [];
+    let servises = [];
+
+    const setList = () => {
+        // col-list-servises
+        // col-list-products
+
+        const htmlServises = servises.map((servise) => {
+            return `<div class="servise servise-${servise.id}">
+                        <div class='col-list-left'>
+                            <div>
+                                ${servise.name}
+                            </div>
+                        </div>
+                        <div class='col-list-right'>
+                            <div>
+                                ${servise.price} руб.
+                            </div>
+                        </div>
+                    </div>`;
+        });
+
+        htmlServises.forEach(element => {
+            $(".col-list-servises").append(element)
+        });
+
+        const htmlProducts = products.map((product) => {
+            return `<div class="product product-${product.id}">
+                        <div class='col-list-left'>
+                            <div>
+                                ${product.name}
+                            </div>
+                        </div>
+                        <div class='col-list-right'>
+                            <div>
+                                ${product.price} руб.
+                            </div>
+                        </div>
+                    </div>`;
+        });
+
+        htmlProducts.forEach(element => {
+            $(".col-list-products").append(element)
+        });
+    }
+
+    const docReady = async () => {
+        data = await api.getServises().then((res) => res);
+
+        products = data.products
+        servises = data.servises
+
+        setList()
+    }
+    docReady()
 </script>

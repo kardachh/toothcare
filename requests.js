@@ -25,10 +25,15 @@ const useFetch = () => {
     });
   };
 
+  const getServises = async () => {
+    return request(url.urlServises);
+  };
+
   return {
     api: {
       getClientsData,
       getDiagnosesData,
+      getServises,
     },
   };
 };

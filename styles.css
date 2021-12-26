@@ -108,6 +108,15 @@ body {
 .search-wrap {
   border-bottom: solid 1px #e6e6e6;
   margin-bottom: 20px;
+  display: flex;
+}
+
+.search-image-wrap{
+  flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
 }
 
 .clients-list{
@@ -225,6 +234,12 @@ height: 500px;
   height: 800px;
 }
 
+.servise,.product{
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
 .divider{
   border: solid 2px #b4b4b4;
   border-radius: 10px;
@@ -237,6 +252,16 @@ height: 500px;
 
 .col-list{
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   width: 100%;
+  height: 85%;
+  overflow: auto;
+  line-height: 30px;
+}
+
+/* Прием – APPOINTMENT */
+
+.appointment-screen-wrap{
+  width: 1000px;
+  height: 800px;
 }
