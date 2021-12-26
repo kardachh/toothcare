@@ -14,7 +14,65 @@
 
 
 <body>
+    <div id="auth" title="Войдите в систему" style="display: none;">
+        <form class="form-auth" action="http://toothcare:8888/api/auth">
+            <label for="login">Логин:</label>
+            <input type="text" id="login" name="login" required />
+            <br>
+            <label for="login">Пароль:</label>
+            <input type="password" id="password" name="password" required />
+        </form>
+    </div>
 
+    <script>
+        console.log(sessionStorage)
+
+        function stopLoad() {
+            sessionStorage.setItem('stopload', 'true'); // занести переменную в хранилище
+            location.reload(); // перезагрузить страницу
+        }
+
+        const checkUser = (infoAuth) => {
+            infoAuth.exist === true ? stopLoad() : alert("Неверный логин или пароль")
+        }
+
+        const onAuthClick = () => {
+            const form = document.querySelector('.form-auth');
+            const url = $(form).attr('action');
+            const data = $(form).serialize()
+            try {
+                $.getJSON(url, data, checkUser)
+            }
+            catch (error) {
+                alert(error)
+            }
+        }
+
+        if (sessionStorage.getItem('stopload') === 'true') { // если в хранилище есть переменная 'stopload'
+            // sessionStorage.setItem('stopload', 'false'); // удалить 'stopload' из хранилища
+        } else { // остановить загрузку HTML страницы
+            if (window.stop !== undefined) {
+                window.stop();
+            } else if (document.execCommand !== undefined) {
+                document.execCommand("Stop", false);
+            }
+            $("#auth").dialog({
+                height: 240,
+                width: 205,
+                modal: true,
+                buttons: {
+                    "Войти": () => onAuthClick(),
+                    Cancel: function () {
+                        dialog.dialog("close");
+                    }
+                },
+                close: function () {
+                    form[0].reset();
+                    allFields.removeClass("ui-state-error");
+                }
+            });
+        }
+    </script>
     <div class="container-main container">
         <div class="appointment-screen-wrap">
             <div class="top-buttons">
