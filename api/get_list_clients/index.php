@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-$dbconn = pg_connect("host=localhost port=1111 dbname=ToothCare user=kardachh password=");
+$dbconn = pg_connect("host=localhost port=1111 dbname=toothCare user=postgres password=");
 
 $query = 'SELECT id, surname, first_name, second_name, gender, birthday, phone FROM "toothCare".patients order by surname';
 

@@ -1,7 +1,8 @@
 <?php
 header('Content-Type: application/json');
 
-$dbconn = pg_connect("host=localhost port=1111 dbname=ToothCare user=kardachh password=") or die('Не удалось соединиться');
+$dbconn = pg_connect("host=localhost port=1111 dbname=toothCare user=postgres password=");
+
 
 $newClient = $_POST;
 
