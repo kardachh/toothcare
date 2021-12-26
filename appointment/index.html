@@ -41,6 +41,7 @@
             const url = $(form).attr('action');
             const data = $(form).serialize()
             try {
+                console.log(data)
                 $.getJSON(url, data, checkUser)
             }
             catch (error) {
@@ -75,12 +76,18 @@
     </script>
 
     <div id="form-add-appointment" title="Добавление новой записи" style="display: none;">
-        <form class="form-new-appointment" action="#">
-            <label for="patient">Логин:</label>
-            <input type="text" id="login" name="login" required />
+        <form class="form-new-appointment" action="http://toothcare:8888/api/test" method="POST">
+            <label for="employee">Выберите врача:</label>
+            <input name="employee" id="employee">
             <br>
-            <label for="login">Пароль:</label>
-            <input type="password" id="password" name="password" required />
+            <label for="datetime">Выберите дату и время:</label>
+            <div>
+                <input type="date" name="date" id="date">
+                <input type="time" name="time" id="time">
+            </div>
+            <br>
+            <label for="patient">Выберите пациента:</label>
+            <input name="patient" id="patient">
         </form>
     </div>
 
@@ -129,17 +136,56 @@
     let employees;
 
     const onAddClick = () => {
-        console.log(123)
+        const form = document.querySelector('.form-new-appointment');
+        const url = $(form).attr('action');
+        const data = $(form).serialize()
+        try {
+            // $.getJSON(url, data, checkUser)
+            console.log(data)
+        }
+        catch (error) {
+            alert(error)
+        }
+    }
+
+    const onAddClickHandler = () => {
+        $("#form-add-appointment").dialog({
+            height: 400,
+            width: 400,
+            modal: true,
+            buttons: {
+                "Добавить": () => onAddClick(),
+                Cancel: function () {
+                    dialog.dialog("close");
+                }
+            },
+            close: function () {
+                form[0].reset();
+                allFields.removeClass("ui-state-error");
+            }
+        });
+        $("#employee").autocomplete({
+            source: employees.map((employee) => `${employee.surname} ${employee.first_name.substring(0, 1)}. ${employee.second_name.substring(0, 1)}.`),
+            select: function (event, ui) {
+                console.log(JSON.stringify(ui));
+            }
+        });
+        $("#patient").autocomplete({
+            source: patients.map((patient) => `${patient.surname} ${patient.first_name.substring(0, 1)}. ${patient.second_name.substring(0, 1)}.`),
+            select: function (event, ui) {
+                console.log(JSON.stringify(ui));
+            }
+        });
     }
 
     const addHandler = () => {
-        $(".add-appointment").click(() => onAddClick())
+        $(".add-appointment").click(() => onAddClickHandler());
     }
 
     const docReady = async () => {
-        appointments = await api.getAppointmentData().then((res) => res)
-        patients = await api.getClientsData().then((res) => res)
-        employees = await api.getEmployeesData().then((res) => res)
+        appointments = await api.getAppointmentData().then((res) => res.appointments)
+        patients = await api.getClientsData().then((res) => res.clients)
+        employees = await api.getEmployeesData().then((res) => res.employees)
         console.log(appointments)
         console.log(patients)
         console.log(employees)

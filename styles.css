@@ -291,7 +291,6 @@ height: 500px;
 }
 
 .big-container{
-  background-color: #94ceb1b8;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
@@ -299,6 +298,11 @@ height: 500px;
   justify-content: center;
   padding-left: 30px;
 }
+
+.form-new-appointment label,.form-new-appointment input{
+  display: block;
+}
+
 /* Авторизация – Auth */
 
 .auth label,.auth input {
