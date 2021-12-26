@@ -27,7 +27,9 @@
 
 
 
-    <script type="module">
+
+
+    <script>
         var sl = document.getElementById('stop-load');
         console.log(sessionStorage)
 
@@ -50,7 +52,7 @@
                 width: 205,
                 modal: true,
                 buttons: {
-                    "Войти": () => console.log(123123),
+                    "Войти": () => onAuthClick,
                     Cancel: function () {
                         dialog.dialog("close");
                     }
@@ -61,15 +63,6 @@
                 }
             });
         }
-
-        const onAuthClick = () => {
-
-        }
-
-
-
-
-
     </script>
 
 
