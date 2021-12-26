@@ -91,7 +91,7 @@
     }
 
     const docReady = async () => {
-        data = await api.getServises().then((res) => res);
+        data = await api.getServisesData().then((res) => res);
 
         products = data.products
         servises = data.servises
