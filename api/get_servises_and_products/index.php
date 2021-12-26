@@ -1,7 +1,7 @@
 
 <?php
 header('Content-Type: application/json');
-$dbconn = pg_connect("host=localhost port=1111 dbname=ToothCare user=kardachh password=") or die('Не удалось соединиться');
+$dbconn = pg_connect("host=localhost port=1111 dbname=toothCare user=postgres password=");
 
 $query_products = 'SELECT id, "name", price FROM "toothCare".products;';
 $query_servises = 'SELECT id, "name", price, id_product FROM "toothCare".services;';
