@@ -267,17 +267,38 @@ height: 500px;
 }
 
 .appointments-list{
-  overflow: scroll;
+  overflow: auto;
   height: calc(100% - 150px);
 }
 
-.sized-box{
-  background-color: #a8a8a8b8;
-  width: 100%;
+.appointment{
+  background-color: #94ceb1b8;
+  width: calc(100% - 40px);
   height: 100px;
-  margin: 20px 0px;
+  margin: 20px;
+  border-radius: 20px;
+  display: flex;
 }
 
+.little-container{
+  background-color: #2eb461b9;
+  width: 110px;
+  height: 100%;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.big-container{
+  background-color: #94ceb1b8;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+  padding-left: 30px;
+}
 /* Авторизация – Auth */
 
 .auth label,.auth input {
