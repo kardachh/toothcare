@@ -9,6 +9,9 @@
         integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"
         integrity="sha256-xH4q8N0pEzrZMaRmd7gQVcTZiFei+HfRTBPJ1OGXC0k=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment-with-locales.min.js"
+        integrity="sha512-LGXaggshOkD/at6PFNcp2V2unf9LzFq6LE+sChH7ceMTDP0g2kn6Vxwgg7wkPP7AAtX+lmPqPdxB47A0Nz0cMQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 
 
@@ -17,10 +20,10 @@
     <div id="auth" title="Войдите в систему" style="display: none;">
         <form class="form-auth" action="http://toothcare:8888/api/auth">
             <label for="login">Логин:</label>
-            <input type="text" id="login" name="login" required />
+            <input type="text" id="login" name="login" required autocomplete="nickname" />
             <br>
             <label for="login">Пароль:</label>
-            <input type="password" id="password" name="password" required />
+            <input type="password" id="password" name="password" required autocomplete="new-password" />
         </form>
     </div>
 
@@ -41,6 +44,7 @@
             const url = $(form).attr('action');
             const data = $(form).serialize()
             try {
+                console.log(data)
                 $.getJSON(url, data, checkUser)
             }
             catch (error) {
@@ -73,6 +77,23 @@
             });
         }
     </script>
+
+    <div id="form-add-appointment" title="Добавление новой записи" style="display: none;">
+        <form class="form-new-appointment" action="http://toothcare:8888/api/test" method="POST">
+            <label for="employee">Выберите врача:</label>
+            <input name="employee" id="employee">
+            <br>
+            <label for="datetime">Выберите дату и время:</label>
+            <div>
+                <input type="date" name="date" id="date">
+                <input type="time" name="time" id="time">
+            </div>
+            <br>
+            <label for="patient">Выберите пациента:</label>
+            <input name="patient" id="patient">
+        </form>
+    </div>
+
     <div class="container-main container">
         <div class="appointment-screen-wrap">
             <div class="top-buttons">
@@ -82,57 +103,13 @@
                 <div class="container page-name">
                     <div>Приём</div>
                 </div>
-                <button class="container button add-client">
+                <button class="container button add-appointment">
                     <div>Добавить запись</div>
                 </button>
             </div>
-        </div>
-    </div>
-    <div class="modal-add-client" style="display: none;">
-        <div class="container container-main modal-window">
-            <div class="modal-add-client-close">
-                <div>
-                    X
-                </div>
+            <div class="appointments-list">
+
             </div>
-
-            <!-- <form class="form-new-client" method="POST" action="../api/add_new_client/index.php">
-                <div>
-                    <label for="surname">Фамилия:</label>
-                    <input id="surname" type="text" name="surname" required />
-                </div>
-                <div>
-                    <label for="first-name">Имя:</label>
-                    <input id="first-name" type="text" name="first-name" required />
-                </div>
-                <div>
-                    <label for="second-name">Отчество:</label>
-                    <input id="second-name" type="text" name="second-name" required />
-                </div>
-                <div>
-                    <label for="gender">Пол:</label>
-                    <div id="gender">
-                        <label for="man">Мужской</label>
-                        <input id="man" type="radio" name="gender" value="М" required />
-
-                        <label for="women">Женский</label>
-                        <input id="women" type="radio" name="gender" value="Ж" required />
-                    </div>
-                </div>
-                <div>
-                    <label for="phone">Телефон</label>
-                    <input id="phone" type="tel" name="phone"
-                        pattern="\+7\s?[\(]{0,1}9[0-9]{2}[\)]{0,1}\s?\d{3}[-]{0,1}\d{2}[-]{0,1}\d{2}"
-                        placeholder="+7(___)___-__-__" required />
-                </div>
-                <div>
-                    <label for="birthday">Дата рождения</label>
-                    <input id="birthday" type="date" name="birthday" required />
-                </div>
-                <button id="add-new-client" class="container button">
-                    Добавить
-                </button>
-            </form> -->
         </div>
     </div>
 </body>
@@ -142,9 +119,100 @@
     import { useFetch } from "./../requests.js"
     const { api } = useFetch()
 
-    const toggleModal = (modalClass) => {
-        $(`.${modalClass}`).toggle()
+    let appointments;
+    let patients;
+    let employees;
+
+    const onAddClick = () => {
+        const form = document.querySelector('.form-new-appointment');
+        const url = $(form).attr('action');
+        const data = $(form).serialize()
+        try {
+            // $.getJSON(url, data, checkUser)
+            console.log(data)
+        }
+        catch (error) {
+            alert(error)
+        }
     }
 
+    const onAddClickHandler = () => {
+        $("#form-add-appointment").dialog({
+            height: 400,
+            width: 400,
+            modal: true,
+            buttons: {
+                "Добавить": () => onAddClick(),
+                Cancel: function () {
+                    dialog.dialog("close");
+                }
+            },
+            close: function () {
+                form[0].reset();
+                allFields.removeClass("ui-state-error");
+            }
+        });
+        $("#employee").autocomplete({
+            source: employees.map((employee) => `${employee.surname} ${employee.first_name.substring(0, 1)}. ${employee.second_name.substring(0, 1)}.`),
+            select: function (event, ui) {
+                console.log(JSON.stringify(ui));
+            }
+        });
+        $("#patient").autocomplete({
+            source: patients.map((patient) => `${patient.surname} ${patient.first_name.substring(0, 1)}. ${patient.second_name.substring(0, 1)}.`),
+            select: function (event, ui) {
+                console.log(JSON.stringify(ui));
+            }
+        });
+    }
 
+    const setAppointments = (appointments) => {
+        const renderedAppointments = appointments.map((appointment) => {
+            moment.locale('ru')
+            return `
+            <div class="appointment appointment-${appointment.id}">
+                        <div class="little-container">
+                            <div>
+                                ${moment(appointment.date, "YYYY-MM-DD").format("DD MMM")}
+                                <br>
+                                <span style="font-weight:bold">${moment(appointment.time, "hh:mm:ss").format("HH:mm")}</span>
+                            </div>
+                        </div>
+                        <div class="big-container">
+                            <div class="half-big-top">
+                                <span style="font-weight:bold">Врач:</span> ${appointment.employee_surname} ${appointment.employee_first_name} ${appointment.employee_second_name}
+                                <br>
+                                <span style="font-weight:bold">Пациент:</span> ${appointment.surname} ${appointment.first_name} ${appointment.second_name}, <span style="font-weight:500; font-size:20px;">${appointment.phone}</span>
+                            </div>
+                            <div class="half-big-bottom">
+                                <div>
+                                    <span style="font-weight:bold">Услуга:</span> ${appointment.name}, <span style="font-weight:bold">описание услуги:</span> ${appointment.description}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            `
+        })
+        renderedAppointments.forEach(element => {
+            $(".appointments-list").append(element)
+        });
+        console.log(renderedAppointments)
+    }
+
+    const addHandler = () => {
+        $(".add-appointment").click(() => onAddClickHandler());
+    }
+
+    const docReady = async () => {
+        appointments = await api.getAppointmentData().then((res) => res.appointments)
+        patients = await api.getClientsData().then((res) => res.clients)
+        employees = await api.getEmployeesData().then((res) => res.employees)
+        console.log(appointments)
+        console.log(patients)
+        console.log(employees)
+        setAppointments(appointments)
+        addHandler()
+    }
+
+    docReady()
 </script>
