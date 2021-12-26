@@ -9,6 +9,9 @@
         integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"
         integrity="sha256-xH4q8N0pEzrZMaRmd7gQVcTZiFei+HfRTBPJ1OGXC0k=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment-with-locales.min.js"
+        integrity="sha512-LGXaggshOkD/at6PFNcp2V2unf9LzFq6LE+sChH7ceMTDP0g2kn6Vxwgg7wkPP7AAtX+lmPqPdxB47A0Nz0cMQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 
 
@@ -105,24 +108,7 @@
                 </button>
             </div>
             <div class="appointments-list">
-                <div class="appointment">
-                    <div class="little-container">
-                        <div> 27 ДЕК 
-                            <br>
-                            11:30
-                        </div>
-                    </div>
-                    <div class="big-container">
-                        <div class="half-big-top">
-                        </div>
-                        <div class="half-big-bottom">
-                            <div>Установка пломбы, врач Жуков
-                                <br>
-                                Пациент: Кардаков Денис Алексеевич
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
             </div>
         </div>
     </div>
@@ -180,6 +166,39 @@
         });
     }
 
+    const setAppointments = (appointments) => {
+        const renderedAppointments = appointments.map((appointment) => {
+            moment.locale('ru')
+            return `
+            <div class="appointment appointment-${appointment.id}">
+                        <div class="little-container">
+                            <div>
+                                ${moment(appointment.date, "YYYY-MM-DD").format("DD MMM")}
+                                <br>
+                                <span style="font-weight:bold">${moment(appointment.time, "hh:mm:ss").format("HH:mm")}</span>
+                            </div>
+                        </div>
+                        <div class="big-container">
+                            <div class="half-big-top">
+                                <span style="font-weight:bold">Врач:</span> ${appointment.employee_surname} ${appointment.employee_first_name} ${appointment.employee_second_name}
+                                <br>
+                                <span style="font-weight:bold">Пациент:</span> ${appointment.surname} ${appointment.first_name} ${appointment.second_name}, <span style="font-weight:500; font-size:20px;">${appointment.phone}</span>
+                            </div>
+                            <div class="half-big-bottom">
+                                <div>
+                                    <span style="font-weight:bold">Услуга:</span> ${appointment.name}, <span style="font-weight:bold">описание услуги:</span> ${appointment.description}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            `
+        })
+        renderedAppointments.forEach(element => {
+            $(".appointments-list").append(element)
+        });
+        console.log(renderedAppointments)
+    }
+
     const addHandler = () => {
         $(".add-appointment").click(() => onAddClickHandler());
     }
@@ -191,6 +210,7 @@
         console.log(appointments)
         console.log(patients)
         console.log(employees)
+        setAppointments(appointments)
         addHandler()
     }
 
